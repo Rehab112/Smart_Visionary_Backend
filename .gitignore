@@ -5,3 +5,4 @@
 /uploads
 /.venv
 /flaskr/users/
+/flaskr/__pycache__

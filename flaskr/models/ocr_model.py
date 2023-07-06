@@ -8,7 +8,10 @@ import textract
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 def read_flipped(img_path):
-    return textract.process(img_path, language='eng').decode('utf-8')
+    txt = textract.process(img_path, language='eng').decode('utf-8')
+    if len(txt) == 0:
+         return "there is no any text to read"
+    return txt
 
 def read(image_path, lang):
     
@@ -23,6 +26,8 @@ def read(image_path, lang):
     # configure pytesseract to recognize Arabic text
     config = r'--psm 3 --oem 3 -l ara'
     text_arabic = pytesseract.image_to_string(sharpened_img, config=config) 
+    if len(text_arabic) == 0:
+         return "there is no any text to read"
     return text_arabic
 
     

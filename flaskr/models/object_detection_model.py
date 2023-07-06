@@ -52,11 +52,11 @@ def detect_objects(obj, image):
         print(object_depth)
         # Determine whether the object is close or far based on its depth value
         if np.count_nonzero(masked_depth) == 0:
-            output += f"The {object} is not found\n"
+            output += f"{object} is not found\n"
         elif object_depth > 60:
-            output += f"The {object} is close\n"
+            output += f"{object} is close\n"
         else:
-            output += f"The {object} is far\n"
+            output += f"{object} is far\n"
     return output
 
 

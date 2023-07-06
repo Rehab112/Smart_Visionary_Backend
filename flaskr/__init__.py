@@ -9,6 +9,7 @@ from .models import image_captioning_model as cap
 from .models import money_recognition_model as money
 from .models import face_recognition_model as face
 from .models import ocr_model as ocr
+from .models import translation_model as trans
 
 #RehabHosam.pythonanywhere.com.
 
@@ -40,7 +41,8 @@ def create_app(test_config=None):
         pass
 
 
-    # a simple page that says hello
+    
+    
     @app.route('/money', methods=['POST'])
     def recognition():
          # check if the post request has the file part
@@ -64,6 +66,7 @@ def create_app(test_config=None):
         os.remove(file_path)
         
         return jsonify(response_data), 200
+    
         
     @app.route('/caption', methods=['POST'])
     def image_captioning():
@@ -172,8 +175,14 @@ def create_app(test_config=None):
         os.remove(file_path)
         
         return jsonify(response_data), 200
-
-
+    
+    @app.route('/trans', methods=['POST'])
+    def translate_txt():
+        txt = request.form.get('text')
+        translated_txt = trans.translate(txt)
+        # Send the text to the Flutter app        
+        return jsonify({'text': translated_txt}), 200
+    
     @app.route('/')
     def hello():
         return 'Hello from vision App!'
