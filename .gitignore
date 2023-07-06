@@ -3,4 +3,5 @@
 /keys
 /runs
 /uploads
-/venv
+/.venv
+/flaskr/users/

@@ -3,12 +3,12 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
 from PIL import Image
-import textract
 from flaskr import functions as fun
 from .models import object_detection_model as det
 from .models import image_captioning_model as cap
-from .models import money_recognition_model as rec
-import ultralytics
+from .models import money_recognition_model as money
+from .models import face_recognition_model as face
+from .models import ocr_model as ocr
 
 #RehabHosam.pythonanywhere.com.
 
@@ -51,11 +51,11 @@ def create_app(test_config=None):
         # Save the image to the server
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        img_name = filename.split(".")[0]
+        # img_name = filename.split(".")[0]
         file.save(file_path)
 
         # Perform OCR text extraction on the image
-        text = rec.predict(file_path, img_name)
+        text = money.predict(file_path)
         print(text)
 
         # Send the text to the Flutter app
@@ -83,6 +83,45 @@ def create_app(test_config=None):
         return jsonify(response_data), 200
     
 
+
+    @app.route('/face', methods=['POST'])
+    def face_recognition():
+        # check if the post request has the file part
+        file = fun.check_image_file()
+        if isinstance(file, tuple):
+          return file  # Error response
+        
+        # Save the image to the server
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        img_name = filename.split(".")[0]
+        file.save(file_path)        
+        token = request.form.get('text')
+
+        # start performing face recognition on the img
+        print("processing")
+        recognized_names = face.recognize_faces(file_path, img_name, token)
+        # print(recognized_names)
+
+        # Send the text to the Flutter app        
+        response_data = {'text': recognized_names}
+        os.remove(file_path)
+        return jsonify(response_data), 200
+    
+    @app.route('/face/add_friend', methods=['POST'])
+    def add_friend():
+        req_data = request.form.get('text').split()
+        return jsonify({'text': face.add_to_friends_list(req_data[0], req_data[1]) }), 200
+
+    
+    @app.route('/new_user', methods=['POST'])
+    def create_user():
+        token = request.form.get('text')
+        face.create_new_user(token)
+        # Send the text to the Flutter app        
+        return jsonify({'text': "user created!"}), 200
+
+
     @app.route('/detect', methods=['POST'])
     def object_detection():
         # check if the post request has the file part
@@ -93,11 +132,11 @@ def create_app(test_config=None):
         image = Image.open(file)
         txt = request.form.get('text')
         
-        objects = []
-        if len(txt.split()) == 1:
-            objects = [txt]  # convert input to list with one element
-        else:
-            objects = txt.split()
+        objects = [txt]
+        # if len(txt.split()) == 1:
+        #     objects = [txt]  # convert input to list with one element
+        # else:
+        #     objects = txt.split()
 
         print(objects)
         # Perform image captioning on the image
@@ -123,7 +162,8 @@ def create_app(test_config=None):
         file.save(file_path)
 
         # Perform OCR text extraction on the image
-        text = textract.process(file_path, language='eng').decode('utf-8')
+        text = ocr.read_flipped(file_path)
+        # text = ocr.read(file_path, 'eng')
         print(text)
 
         # Send the text to the Flutter app
