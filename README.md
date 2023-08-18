@@ -14,10 +14,10 @@ The backend for the Smart Visionary application, designed to assist the visually
 #### Features
 1. **Face Recognition** - Recognizes familiar faces.
 2. **Image Captioning** - Describes an image in a sentence.
-3. **Object Detection** - Identifies and labels objects in an image.
+3. **Object Detection** -  Detect specified objects in an image and estimate their depth.
 4. **OCR** - Optical Character Recognition for reading text in images.
 5. **Money Recognition** - Trained to recognize Egyptian currency using YOLO v8.
-6. **Translation** - Translates input text.
+6. **Translation** - Translates input text into the Arabic language.
 
 #### Workflow
 Once the user chooses a model or feature in the app and double-taps to capture an image, the image is sent to the backend through the specified API for the chosen feature.
