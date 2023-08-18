@@ -3,4 +3,6 @@
 /keys
 /runs
 /uploads
-/venv
+/.venv
+/flaskr/users/
+/flaskr/__pycache__

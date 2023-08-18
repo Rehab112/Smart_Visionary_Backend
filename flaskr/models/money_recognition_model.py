@@ -3,7 +3,7 @@ import os
 
 model = YOLO("flaskr/models/best.pt")
 
-def predict(image_path, filename):
+def predict(image_path):
 
     prediction = model(image_path)
     # print(prediction)
@@ -30,7 +30,8 @@ def predict(image_path, filename):
             elif(names[int(c)] == "200EGP"):
                 output += "200 pounds\n"
                 sum+= 200
-            
+    if sum == 0:
+        return "There is no money"        
     output += "total money you have is "+ str(sum) + " egyptian pounds"
     return output
 

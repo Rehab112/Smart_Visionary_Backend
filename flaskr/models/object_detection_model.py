@@ -7,12 +7,12 @@ from PIL import Image
 
 
 
+
 processor = CLIPSegProcessor.from_pretrained("CIDAS/clipseg-rd64-refined")
 model = CLIPSegForImageSegmentation.from_pretrained("CIDAS/clipseg-rd64-refined")
 
 processor2 = DPTImageProcessor.from_pretrained("Intel/dpt-large")
 model2 = DPTForDepthEstimation.from_pretrained("Intel/dpt-large")
-GPU = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def detect_objects(obj, image):
     image = image.resize((256, 256))
@@ -52,45 +52,13 @@ def detect_objects(obj, image):
         print(object_depth)
         # Determine whether the object is close or far based on its depth value
         if np.count_nonzero(masked_depth) == 0:
-            output += f"The {object} is not found\n"
+            output += f"{object} is not found\n"
         elif object_depth > 60:
-            output += f"The {object} is close\n"
+            output += f"{object} is close\n"
         else:
-            output += f"The {object} is far\n"
+            output += f"{object} is far\n"
     return output
 
-
-
-
-
-
-
-    # # Get the heat map for the prompt
-    # heat_map = torch.sigmoid(preds[1][0]).detach().cpu().numpy()
-    # # Resize the heat map to match the original image size
-    # heat_map_resized = cv2.resize(heat_map, (image.size[0], image.size[1]))
-    # # Apply a threshold to the heat map to get the mask
-    # mask = (heat_map_resized > 0.5).astype(np.uint8)
-    # # Apply the mask to the original image
-    # masked_image = cv2.bitwise_and(np.array(image), np.array(image), mask=mask)
-
-
-    
-    # # Apply the mask to the depth image
-    # masked_depth = cv2.bitwise_and(np.array(depth), np.array(depth), mask=mask)
-    # mask=np.uint8(mask)*255
-    # depth=np.array(depth)
-    # depth=np.expand_dims(depth,axis=2)
-    # depth_img=np.zeros((mask.shape[0],mask.shape[1],1))
-    # depth_img=np.uint8(depth_img)*255
-
-    # # Calculate the average depth value for the object in the mask
-    # object_depth = np.mean(depth_img[depth_img != 0])
-    # # Determine whether the object is close or far based on its depth value
-    # if object_depth > 60:
-    #     print("The object is close")
-    # else:
-    #     print("The object is far")
 
 
 
