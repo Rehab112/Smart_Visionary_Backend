@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 import os
 from PIL import Image
 from flaskr import functions as fun
-from .models import object_detection_model as det
+from .models import object_detection_model as obj
 from .models import image_captioning_model as cap
 from .models import money_recognition_model as money
 from .models import face_recognition_model as face
@@ -144,7 +144,7 @@ def create_app(test_config=None):
         print(objects)
         # Perform image captioning on the image
         print("processing")
-        output = det.detect_objects(objects, image)
+        output = obj.detect_objects(objects, image)
             
         print(output)
 
